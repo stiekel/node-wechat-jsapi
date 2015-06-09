@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>wechat share test</title>
+</head>
+<body>
+<h1>Wechat share</h1>
+<p id = "message">Loading</p>
+<script type="text/javascript" src="http://res.wx.qq.com/open/js/jweixin-1.0.0.js"></script>
+<script type="text/javascript" src="http://libs.useso.com/js/jquery/2.1.1-rc2/jquery.js"></script>
+<script type="text/javascript">
+  $(document).ready(function(){
+    $.get('/sign', function(data, status){
+      console.log('status, data: ', status, data);
+      if(status !== 'success') {
+        console.log('return');
+        return;
+      }
+      $("#message").html('成功获取签名');
+      
+      $("#message").html(JSON.stringify(data));
+
+      wx.config({
+        // debug: true,
+        appId: data.appId,
+        timestamp: data.timestamp,
+        nonceStr: data.nonceStr,
+        signature: data.signature,
+        jsApiList: ['onMenuShareTimeline', 'onMenuShareAppMessage']
+      });
+    });
+  });
+
+  wx.ready(function(e, x){
+    console.log('wx.ready, e, x: ', e, x);
+    $("#message").html('wx.ready, e, x: ', e, x);
+    wx.onMenuShareTimeline({
+      title: '我有一头小毛驴',
+      link: "http://chensd.com/",
+      imgUrl: 'http://dn-coding-net-production-static.qbox.me/ff1571af-4c01-4eb2-bec8-81e7f8795579.jpg',
+      success: function(){
+        $("#message").html('分享成功');
+      },
+      cancel: function(){
+        $("#message").html('用户取消了分享');
+      }
+
+    });
+  });
+  wx.error(function(e, x){
+    console.log('wx.error, e, x: ', e, x);
+    $("#message").html('wx.error, e, x: ', e, x);
+  });
+
+
+</script>
+</body>
+</html>

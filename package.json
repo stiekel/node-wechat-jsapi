@@ -1,0 +1,21 @@
+{
+  "name": "node-wechat-jsapi",
+  "version": "0.0.1",
+  "description": "wechat jsapi verify for Node.js",
+  "main": "app.js",
+  "dependencies": {
+    "jssha": "^1.5.0",
+    "express": "~4.12.4",
+    "request": "~2.57.0"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": {
+    "name": "stiekel",
+    "website": "http://chensd.com/",
+    "email": "histkc@gmail.com"
+  },
+  "license": "Apache Licence 2.0"
+}
