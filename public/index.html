@@ -6,28 +6,48 @@
 <body>
 <h1>Wechat share</h1>
 <p id = "message">Loading</p>
+<div id = "imgQR"></div>
+<p>使用微信扫描，在微信浏览器中打开本页</p>
 <script type="text/javascript" src="http://res.wx.qq.com/open/js/jweixin-1.0.0.js"></script>
 <script type="text/javascript" src="http://libs.useso.com/js/jquery/2.1.1-rc2/jquery.js"></script>
+<script type="text/javascript" src="./vender/qrcode.min.js"></script>
 <script type="text/javascript">
   $(document).ready(function(){
-    $.get('/sign', function(data, status){
-      console.log('status, data: ', status, data);
-      if(status !== 'success') {
-        console.log('return');
-        return;
-      }
-      $("#message").html('成功获取签名');
-      
-      $("#message").html(JSON.stringify(data));
+    $.ajax({
+      url: '/sign',
+      type: 'GET',
+      error: function(err){
+        console.log('error: ', err);
+        $("#message").html('从服务器获取签名失败');
+      },
+      success: function(data, status){
+        console.log('status, data: ', status, data);
+        if(data.code) {
+          $("#message").html('data.code: ', data.code);
+        }
+        $("#message").html('成功获取签名');
+        
+        $("#message").html(JSON.stringify(data));
 
-      wx.config({
-        // debug: true,
-        appId: data.appId,
-        timestamp: data.timestamp,
-        nonceStr: data.nonceStr,
-        signature: data.signature,
-        jsApiList: ['onMenuShareTimeline', 'onMenuShareAppMessage']
-      });
+        wx.config({
+          // debug: true,
+          appId: data.appId,
+          timestamp: data.timestamp,
+          nonceStr: data.nonceStr,
+          signature: data.signature,
+          jsApiList: ['onMenuShareTimeline', 'onMenuShareAppMessage']
+        });
+      }
+    });
+    var qrUrl = location.href;
+    console.log('QR for: ', qrUrl);
+    new QRCode(document.getElementById("imgQR"), {
+      text: qrUrl,
+      width: 256,
+      height: 256,
+      colorDark: "#1E824C",
+      colorLight: "#C8F7C5",
+      correctLevel : QRCode.CorrectLevel.H
     });
   });
 
